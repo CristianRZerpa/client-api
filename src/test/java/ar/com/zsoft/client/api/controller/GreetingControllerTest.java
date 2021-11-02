@@ -6,7 +6,6 @@ public class GreetingControllerTest {
 
     @Test
     public void greetingTest() {
-
         assert(false);
     }
 
