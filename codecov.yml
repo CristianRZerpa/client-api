@@ -10,3 +10,6 @@ codecov:
   notify:
     after_n_builds: 2
     wait_for_ci: yes
+  ignore:
+    - "<exclude>src/main/java/ar/com/zsoft/client/api/ClientApiApplication.class"
+    - "src/main/java/ar/com/zsoft/client/api/entity/*.class"
