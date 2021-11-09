@@ -26,20 +26,6 @@ jobs:
       - run:
           name: Test
           command: mvn test
-      - attach_workspace:
-          at: ./target
-      - run: |
-            ./mvnw \
-            -Dtest=$(for file in $(circleci tests glob "src/test/**/**.java" \
-            | circleci tests split --split-by=timings); \
-            do basename $file \
-            | sed -e "s/.java/,/"; \
-            done | tr -d '\r\n') \
-            -e test verify
-      - store_test_results:
-          path: target/surefire-reports
-      - store_artifacts:
-          path: target/site/jacoco/index.html
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
