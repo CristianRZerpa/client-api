@@ -29,7 +29,11 @@ jobs:
       - run:
           name: Test
           command: mvn test
-
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
       - codecov/upload
 
 # Invoke jobs via workflows
@@ -39,3 +43,4 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
+      - example-job
