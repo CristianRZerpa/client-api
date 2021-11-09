@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.com.zsoft.client.api.entity.Client;
 import ar.com.zsoft.client.api.repository.ClientRepository;
+import ar.com.zsoft.client.api.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,42 +23,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClientController {
 
     @Autowired
-    private ClientRepository clientRepo;
+    private ClientService clientService;
 
     @GetMapping
     public Iterable findAll() {
-        return clientRepo.findAll();
+        return clientService.findAll();
     }
 
     @GetMapping("/{id}")
     public Client findOneClient(@PathVariable Long id) {
-        return clientRepo.findById(id).orElseThrow(null);
+        return clientService.findOneClient(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Client create(@RequestBody Client client) {
-        return clientRepo.save(client);
+        return clientService.create(client);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        clientRepo.findById(id).orElseGet(null);
-        clientRepo.deleteById(id);
+        clientService.delete(id);
     }
 
     @PutMapping("/{id}")
     public Client updateClient(@RequestBody Client client, @PathVariable Long id) throws Exception {
-        if (client.getId() != id) {
-            throw new Exception("Error en actualizar el cliente");
-        }
-        clientRepo.findById(id).get();
-        return clientRepo.save(client);
+        return clientService.updateClient(client, id);
     }
 
     @GetMapping(path = "/find")
     public List<Client> getClientsByFirstNameAndLastname(@RequestParam String firstName, @RequestParam String lastName) {
-        return clientRepo.findByFirstNameAndLastName(firstName, lastName);
+        return clientService.getClientsByFirstNameAndLastname(firstName, lastName);
     }
 }
 
