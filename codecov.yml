@@ -1,3 +1,0 @@
-ignore:
-    - "src/main/java/ar/com/zsoft/client/api/ClientApiApplication.class"
-    - "src/main/java/ar/com/zsoft/client/api/entity/*.class"
