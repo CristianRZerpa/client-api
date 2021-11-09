@@ -84,6 +84,10 @@
 							<dataFile>target/jacoco.exec</dataFile>
 							<!-- Sets the output directory for the code coverage report. -->
 							<outputDirectory>target/my-reports</outputDirectory>
+							<excludes>
+								<exclude>ar/com/zsoft/client/api/entity/*.class</exclude>
+								<exclude>ar/com/zsoft/client/api/ClientApiApplication.class</exclude>
+							</excludes>
 						</configuration>
 					</execution>
 				</executions>

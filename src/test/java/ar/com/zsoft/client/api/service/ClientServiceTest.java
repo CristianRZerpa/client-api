@@ -1,32 +1,31 @@
-package ar.com.zsoft.client.api.controller;
+package ar.com.zsoft.client.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import ar.com.zsoft.client.api.entity.Client;
-import ar.com.zsoft.client.api.service.ClientService;
-import org.junit.jupiter.api.Assertions;
+import ar.com.zsoft.client.api.repository.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class ClientControllerTest {
+public class ClientServiceTest {
 
     @InjectMocks
-    private ClientController clientController;
+    private ClientService clientService;
 
     @Mock
-    private ClientService clientService;
+    private ClientRepository repository;
 
     private List<Client> clients;
 
@@ -39,8 +38,8 @@ public class ClientControllerTest {
 
     @Test
     public void findAllTest() {
-        when(clientService.findAll()).thenReturn(clients);
-        List<Client> clients = (List<Client>) clientController.findAll();
+        when(repository.findAll()).thenReturn(clients);
+        List<Client> clients = (List<Client>) clientService.findAll();
         assertThat(clients).hasSize(2)
                 .noneMatch(x -> x.getId() < 1)
                 .allMatch(x -> x.getAge() >= 20);
@@ -48,39 +47,52 @@ public class ClientControllerTest {
 
     @Test
     public void findOneClientTest() {
-        when(clientService.findOneClient(0l)).thenReturn(clients.get(0));
-        Client client = clientController.findOneClient(0l);
+        when(repository.findById(1l)).thenReturn(Optional.ofNullable(clients.get(0)));
+        Client client = clientService.findOneClient(1l);
         assertEquals(1,client.getId());
         assertEquals("Cristian",client.getFirstName());
     }
 
     @Test
     public void createTest() {
-        when(clientService.create(clients.get(0))).thenReturn(clients.get(0));
-        Client client = clientController.create(clients.get(0));
+        when(repository.save(clients.get(0))).thenReturn(clients.get(0));
+        Client client = clientService.create(clients.get(0));
         assertEquals(1,client.getId());
         assertEquals("Cristian",client.getFirstName());
     }
 
     @Test
     public void deleteTest() {
-        clientController.delete(0l);
-        verify(clientService, times(1)).delete(0l);
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(clients.get(0)));
+        clientService.delete(0l);
+        verify(repository, times(1)).findById(0l);
+        verify(repository, times(1)).deleteById(0l);
     }
 
     @Test
     public void updateClientTest() throws Exception {
-        when(clientService.updateClient(clients.get(0),1l)).thenReturn(clients.get(0));
-        Client client = clientController.updateClient(clients.get(0),1l);
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(clients.get(0)));
+        when(repository.save(clients.get(0))).thenReturn(clients.get(0));
+        Client client = clientService.updateClient(clients.get(0),1l);
         assertEquals(1,client.getId());
         assertEquals("Cristian",client.getFirstName());
     }
 
     @Test
+    public void updateClientIdNotEqualsTest() throws Exception {
+        Exception thrown = assertThrows(
+                Exception.class,
+                () -> clientService.updateClient(clients.get(0),2l),
+                "Expected updateClient() to throw, but it didn't"
+        );
+        assertEquals("Error en actualizar el cliente",thrown.getMessage());
+    }
+
+    @Test
     public void getClientsByFirstNameAndLastnameTest() {
-        when(clientService.getClientsByFirstNameAndLastname("Cristian", "Zerpa"))
+        when(repository.findByFirstNameAndLastName("Cristian", "Zerpa"))
                 .thenReturn(Arrays.asList(clients.get(0)));
-        List<Client> clients = clientController.getClientsByFirstNameAndLastname("Cristian", "Zerpa");
+        List<Client> clients = clientService.getClientsByFirstNameAndLastname("Cristian", "Zerpa");
         assertThat(clients).hasSize(1)
                 .allMatch(x -> x.getId() == 1)
                 .allMatch(x -> "Cristian".equals(x.getFirstName()))
