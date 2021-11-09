@@ -96,6 +96,10 @@
 					<systemPropertyVariables>
 						<jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
 					</systemPropertyVariables>
+					<excludes>
+						<exclude>src/main/java/ar/com/zsoft/client/api/entity/*.class</exclude>
+						<exclude>src/main/java/ar/com/zsoft/client/api/ClientApiApplication.class</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
