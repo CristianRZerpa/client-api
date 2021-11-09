@@ -11,5 +11,22 @@ codecov:
     after_n_builds: 2
     wait_for_ci: yes
   ignore:
-    - "<exclude>src/main/java/ar/com/zsoft/client/api/ClientApiApplication.class"
+    - "src/main/java/ar/com/zsoft/client/api/ClientApiApplication.class"
+    - "src/main/java/ar/com/zsoft/client/api/entity/*.class"
+coverage:
+  range: "50...100"
+  status:
+    # project will give us the diff in the total code coverage between a commit
+    # and its parent
+    project:
+      default:
+        target: auto
+        threshold: "0.05%"
+    # patch would give us the code coverage of the diff only
+    patch: false
+    # changes tells us if there are unexpected code coverage changes in other files
+    # which were not changed by the diff
+    changes: false
+  ignore:  # ignore testutils for coverage
+    - "src/main/java/ar/com/zsoft/client/api/ClientApiApplication.class"
     - "src/main/java/ar/com/zsoft/client/api/entity/*.class"
