@@ -2,6 +2,7 @@ package ar.com.zsoft.client.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import ar.com.zsoft.client.api.entity.Client;
@@ -45,7 +46,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void findOneClient() {
+    public void findOneClientTest() {
         when(repository.findById(1l)).thenReturn(Optional.ofNullable(clients.get(0)));
         Client client = clientService.findOneClient(1l);
         assertEquals(1,client.getId());
@@ -53,7 +54,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void create() {
+    public void createTest() {
         when(repository.save(clients.get(0))).thenReturn(clients.get(0));
         Client client = clientService.create(clients.get(0));
         assertEquals(1,client.getId());
@@ -61,7 +62,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void delete() {
+    public void deleteTest() {
         when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(clients.get(0)));
         clientService.delete(0l);
         verify(repository, times(1)).findById(0l);
@@ -69,7 +70,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void updateClient() throws Exception {
+    public void updateClientTest() throws Exception {
         when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(clients.get(0)));
         when(repository.save(clients.get(0))).thenReturn(clients.get(0));
         Client client = clientService.updateClient(clients.get(0),1l);
@@ -78,7 +79,17 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void getClientsByFirstNameAndLastname() {
+    public void updateClientIdNotEqualsTest() throws Exception {
+        Exception thrown = assertThrows(
+                Exception.class,
+                () -> clientService.updateClient(clients.get(0),2l),
+                "Expected updateClient() to throw, but it didn't"
+        );
+        assertEquals("Error en actualizar el cliente",thrown.getMessage());
+    }
+
+    @Test
+    public void getClientsByFirstNameAndLastnameTest() {
         when(repository.findByFirstNameAndLastName("Cristian", "Zerpa"))
                 .thenReturn(Arrays.asList(clients.get(0)));
         List<Client> clients = clientService.getClientsByFirstNameAndLastname("Cristian", "Zerpa");

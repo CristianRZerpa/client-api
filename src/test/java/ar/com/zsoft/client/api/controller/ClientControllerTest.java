@@ -47,7 +47,7 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void findOneClient() {
+    public void findOneClientTest() {
         when(clientService.findOneClient(0l)).thenReturn(clients.get(0));
         Client client = clientController.findOneClient(0l);
         assertEquals(1,client.getId());
@@ -55,7 +55,7 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void create() {
+    public void createTest() {
         when(clientService.create(clients.get(0))).thenReturn(clients.get(0));
         Client client = clientController.create(clients.get(0));
         assertEquals(1,client.getId());
@@ -63,13 +63,13 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void delete() {
+    public void deleteTest() {
         clientController.delete(0l);
         verify(clientService, times(1)).delete(0l);
     }
 
     @Test
-    public void updateClient() throws Exception {
+    public void updateClientTest() throws Exception {
         when(clientService.updateClient(clients.get(0),1l)).thenReturn(clients.get(0));
         Client client = clientController.updateClient(clients.get(0),1l);
         assertEquals(1,client.getId());
@@ -77,7 +77,7 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void getClientsByFirstNameAndLastname() {
+    public void getClientsByFirstNameAndLastnameTest() {
         when(clientService.getClientsByFirstNameAndLastname("Cristian", "Zerpa"))
                 .thenReturn(Arrays.asList(clients.get(0)));
         List<Client> clients = clientController.getClientsByFirstNameAndLastname("Cristian", "Zerpa");
